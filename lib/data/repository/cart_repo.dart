@@ -66,6 +66,7 @@ class CartRepo{
     }
 
     for(int i = 0; i < cart.length; i++){
+      print("History cart: ${cart[i]}");
       cartHistory.add(cart[i]);
     }
     removeCart();
