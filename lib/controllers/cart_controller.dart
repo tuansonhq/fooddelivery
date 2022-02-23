@@ -143,4 +143,11 @@ class CartController extends GetxController{
     update();
   }
 
+//  Logout
+
+  void clearCartHistory(){
+    cartRepo.clearCartHistory();
+    update();
+  }
+
 }

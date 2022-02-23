@@ -78,8 +78,17 @@ class CartRepo{
       print("the time of the order is " + getCartHistoryList()[j].time.toString());
     }
   }
+
   void removeCart(){
     cart = [];
     sharedPreferences.remove(AppConstants.CART_LIST);
+  }
+
+  //Logout
+
+  void clearCartHistory(){
+    removeCart();
+    cartHistory = [];
+    sharedPreferences.remove(AppConstants.CART_HISTORY_LIST);
   }
 }

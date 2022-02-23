@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fooddelivery/controllers/cart_controller.dart';
 import 'package:fooddelivery/models/cart_model.dart';
+import 'package:fooddelivery/base/no_date_page.dart';
 import 'package:fooddelivery/routes/route_helper.dart';
 import 'package:fooddelivery/utils/app_constants.dart';
 import 'package:fooddelivery/utils/colors.dart';
@@ -46,6 +47,18 @@ class CartHistory extends StatelessWidget {
 
     var listCounter = 0;
 
+    Widget timeWidget(int index){
+      var outPutDate = DateTime.now().toString();
+      if(index < getCartHistoryList.length){
+        DateTime parseDate = DateFormat("yyyy-MM-dd HH:mm:ss").parse(getCartHistoryList[listCounter].time!);
+        var inputDate = DateTime.parse(parseDate.toString());
+        var outPutFormat = DateFormat("MM/dd/yyyy hh:mm a");
+        outPutDate = outPutFormat.format(inputDate);
+      }
+
+      return BigText(text: outPutDate);
+    }
+
     return Scaffold(
       body: Column(
         children: [
@@ -69,7 +82,9 @@ class CartHistory extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
+          GetBuilder<CartController>(builder: (_cartController){
+            return _cartController.getCartHistoryList().length > 0
+              ? Expanded(
               child: Container(
                 margin: EdgeInsets.only(
                     top: Dimensions.height20,
@@ -88,13 +103,14 @@ class CartHistory extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ((){
+                              /*((){
                                 DateTime parseDate = DateFormat("yyyy-MM-dd HH:mm:ss").parse(getCartHistoryList[listCounter].time!);
                                 var inputDate = DateTime.parse(parseDate.toString());
                                 var outPutFormat = DateFormat("MM/dd/yyyy hh:mm a");
                                 var outPutDate = outPutFormat.format(inputDate);
                                 return BigText(text: outPutDate);
-                              }()),
+                              }())*/
+                              timeWidget(listCounter),
                               SizedBox(height: Dimensions.height10,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,21 +122,21 @@ class CartHistory extends StatelessWidget {
                                         listCounter++;
                                       }
                                       return index <= 2
-                                        ? Container(
-                                      height: Dimensions.height20*5,
-                                      width: Dimensions.width20*5,
-                                      margin: EdgeInsets.only(right: Dimensions.width10/2),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(Dimensions.radius15/2),
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  AppConstants.BASE_URL + AppConstants.UPLOAD_URL + getCartHistoryList[listCounter - 1].img!
-                                              )
-                                          )
-                                      ),
-                                    )
-                                        : Container();
+                                          ? Container(
+                                        height: Dimensions.height20*5,
+                                        width: Dimensions.width20*5,
+                                        margin: EdgeInsets.only(right: Dimensions.width10/2),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(Dimensions.radius15/2),
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                    AppConstants.BASE_URL + AppConstants.UPLOAD_URL + getCartHistoryList[listCounter - 1].img!
+                                                )
+                                            )
+                                        ),
+                                      )
+                                          : Container();
                                     }),
                                   ),
                                   Container(
@@ -181,7 +197,11 @@ class CartHistory extends StatelessWidget {
                   ),
                 ),
               )
-          ),
+          )
+              : SizedBox(
+                height: MediaQuery.of(context).size.height/1.5,
+                child: const NoDatePage(text: "You didn't buy anything so far !",imgPath: "assets/image/empty_box.png",));
+          }),
         ],
       ),
     );
