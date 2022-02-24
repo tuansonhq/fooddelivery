@@ -12,7 +12,10 @@ class ApiClient extends GetConnect implements GetxService{
   ApiClient({ required this.appBaseUrl, required this.sharedPreferences}){
     baseUrl = appBaseUrl;
     timeout = Duration(seconds: 30);
-    token = sharedPreferences.getString(AppConstants.TOKEN)!;
+    //token = sharedPreferences.getString(AppConstants.TOKEN)!;
+
+    token = AppConstants.TOKEN;
+    print("token=    ${token}");
     _mainHeaders = {
       'Content-type' : 'application/json; charset=UTF-8',
       'Authorization' : 'Bearer $token',
@@ -39,10 +42,8 @@ class ApiClient extends GetConnect implements GetxService{
   }
 
   Future<Response> postData(String uri,dynamic body) async {
-    print("Body= ${body.toString()}");
     try{
       Response response = await post(uri, body,headers: _mainHeaders);
-      print("Response= ${response.toString()}");
       return response;
     }catch(e){
       return Response(statusCode: 1,statusText: e.toString());
